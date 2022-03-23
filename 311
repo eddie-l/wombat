@@ -1,0 +1,160 @@
+sorting with wallaby
+#include <kipr/wombat.h>
+#include <stdio.h>
+#include <kipr/botball.h>
+
+void turn(char n);
+void linefollow(int n, int port);
+void lnsqr(int port);
+char colour_with_a_u_sensor_for_pompoms();
+int sort(int port, int counter);
+
+int main()
+{
+    enable_servos();
+    printf("%d",camera_open());
+    msleep(50);
+    printf("%d \n", sort(0,0));
+    camera_close();
+    return 0;
+}
+
+void linefollow(int n, int port)
+{
+    mav(0,1300);
+    mav(1,1300);
+    int i;
+    int p;
+    for(i = 0; i < n; i++)
+    {
+        p = digital(port);
+        if (p == 1)
+        {
+            mav(0, -1500);
+            mav(1, 1100);
+        }
+        else if (p == 0)
+        {
+            mav(0, -1100);
+            mav(1, 1500);
+        }
+        else
+        {
+            printf("ERROR: ");
+            printf("Sensor either missing or broken");
+            break;
+        }
+        msleep(1);
+    }
+}
+
+void turn(char n)
+{
+    if (n == 'l')
+    {
+        mav(0, 1500);
+        mav(1, 1500);
+        msleep(847);
+        alloff();
+    }
+    else if (n == 'r')
+    {
+        mav(0, -1500);
+        mav(1, -1500);
+        msleep(847);
+        alloff();
+    }
+    else
+    {
+        printf("ERROR: ");
+        printf("You are a stinky bozo type in either 'r' or 'l' to make it turn right or left respectively");
+        printf(" how hard can that be, bozo head");
+    }
+} 
+void lnsqr(int port)
+{
+    mav(0, -1000);
+    mav(1, -1000);
+    while(0 == 0)
+    {
+        if (digital(port) == 1)
+        {
+            alloff();
+            break;
+        }
+    }
+}
+
+char colour_with_a_u_sensor_for_pompoms()
+{
+    int r, c, i;
+    camera_update();
+    const unsigned char* img = get_camera_frame();
+    int green = 0;
+    int red = 0;
+    int other = 0;
+    for(r = 30; r < 90; r++) 
+    {
+           for(c = 50; c < 110; c++) 
+        {
+              i = 3(160r + c); // index of pixel to paint into row r, column c
+            if (img[i + 2] > (img[i + 1] + 25))
+            {
+                red += 1;
+            }
+            else if (img[i + 1] > (img[i + 2] + 25))
+            {
+                green += 1;
+            }
+            else
+            {
+                other += 1;
+            }
+           }
+    }
+    if (other > 2.3red && other > 2.3green)
+    {
+        return 'E';
+    }
+    if (red< green)
+    {
+        return 'g';
+    }
+    else if (red > green)
+    {
+        return 'r';
+    }
+    else
+    {
+        return 'E';
+    }
+}
+int sort(int port, int counter)
+{
+    int green = 0;
+    int neutral = 1024;
+    int red = 2047;
+    char data = colour_with_a_u_sensor_for_pompoms();
+    printf("here");
+    if (data == 'r')
+    {
+        set_servo_position(port, red);
+        msleep(500);
+        set_servo_position(port, neutral);
+        msleep(500);
+        return 1;
+    }
+    else if (data == 'g')
+    {
+        set_servo_position(port, green);
+        msleep(500);
+        set_servo_position(port, neutral);
+        msleep(500);
+        return 1;
+    }
+    else if (counter < 1)
+    {
+        sort(port, counter + 1);
+    }
+    return 0;
+}
