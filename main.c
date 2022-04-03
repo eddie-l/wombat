@@ -1,7 +1,7 @@
 #include <kipr/wombat.h>
 char colour_with_a_u_sensor_for_pompoms();
 void sort();
-void linefollow(int n);
+void linefollow(int n,int multiplier)
 int absol(int num);
 void slow_servo(int port, int maxmin,int speed, int interval);
 void turn(char n);
@@ -213,12 +213,12 @@ void mall(int speed)
     mav(motor1, speed);
     mav(motor2, -speed);
 }
-void linefollow(int n)
+void linefollow(int n,int multiplier)
 {
     //motor 0 is right, motor 1 is left
 
-    mav(motor1, 1300);
-    mav(motor2, -1300);
+    mav(motor1, 1300*multiplier);
+    mav(motor2, -1300*multiplier);
     int i;
     for(i = 0; i < n; i+=100)
     {
@@ -226,28 +226,27 @@ void linefollow(int n)
         if (analog(tophat2) < threshold && analog(tophat1) >= threshold)
         {
             //turn right
-            mav(motor1, 500);
-            mav(motor2, -1000);
+            mav(motor1, 500*multiplier);
+            mav(motor2, -1000*multiplier);
             //printf("scenario /////////////////\n");
 
         }
         else if (analog(tophat1) < threshold && analog(tophat2) >= threshold)
         {
             //turn left
-            mav(motor1, -500);
-            mav(motor2, -1000);
+            mav(motor1, -500*multiplier);
+            mav(motor2, -1000*multiplier);
             //printf("scenario \\\\\\\\\\\\\\\\\n");
         }
         else if (analog(tophat2) >= threshold && analog(tophat1) >= threshold)
         {
             printf("LG, life's good\n");
-                mall(1300);
+                mall(1300*multiplier);
         }
         //printf("%i, ", direction);
         msleep(100);
     }
 }
-
 
 void lnsqr(char n)
 {
