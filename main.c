@@ -173,37 +173,37 @@ void path()
     alloff();
     slow_servo(1,300,1,2);
     turn('r');
-    mall(-1500);
+    alloff();
+    mall(-1400);
     msleep(150);
     printf("following line...\n");
-    linefollow(8000);
-    mall(500);
-    while (digital(frontsensor) == 0);
-    {
-        msleep(50);
-    }
+    linefollow(8000,1);
     alloff();
     slow_servo(1,800,1,2);
-    mall(-500);
-    msleep(1000);
+    linefollow(1000,-1);
+    alloff();
     slow_servo(1,300,1,2);
+    linefollow(2000,1);
     mall(500);
     while (digital(frontsensor) == 0);
     {
         msleep(50);
     }
+    
     mall(-500);
-    msleep(750);
+    msleep(1000);
     alloff();
     slow_servo(1,1460,1,2);
     turn('l');
     turn('l');
     lnsqr('b');
-    mall(-1500);
+    linefollow(2000,-1);
+    mall(-500);
     while (digital(backsensor) == 0)
     {
         msleep(50);
     }
+    alloff();
     sort();
 }
 
